@@ -58,6 +58,8 @@ function fallbackMockContent(input: GenerationInput): string {
       ].join("\n");
     case "hooks":
       return "Validate generated changes with the narrowest reliable local command.";
+    case "commands":
+      return "Run the relevant CLI command to verify the changed subsystem.";
   }
 }
 

@@ -134,6 +134,85 @@ harness-gen --target D:\work\my-service --targets copilot --outputs skills,rules
 harness-gen --target D:\work\my-service --targets copilot --outputs skills,rules,hooks,agents --mock
 ```
 
+## Archetype scaffolding
+
+The `archetype` subcommand scaffolds a complete set of AI agent workflow files into a target project in one step, without scanning source code. This is useful when you want to establish a structured SDLC workflow before any generation pass.
+
+```bash
+harness-gen archetype --name sdlc --target claude --project D:\work\my-service
+```
+
+### Available archetypes
+
+| Name | Description |
+|---|---|
+| `sdlc` | Base SDLC pipeline (spec → plan → execution → review) |
+| `sdlc-java-spring` | SDLC + Spring Boot stack conventions |
+| `sdlc-dotnet` | SDLC + .NET / ASP.NET Core conventions |
+| `sdlc-python-flask` | SDLC + Flask conventions |
+| `sdlc-python-fastapi` | SDLC + FastAPI conventions |
+
+List archetypes:
+
+```bash
+harness-gen archetype --list
+```
+
+### Archetype options
+
+- `--name <archetype>`: the archetype to scaffold (required unless `--list` is used)
+- `--project <path>`: target project directory (defaults to current directory)
+- `--target <tool>`: tool target — `claude`, `copilot`, or `cursor` (default: `claude`)
+- `--dry-run`: print planned files without writing
+- `--force`: overwrite existing files
+- `--list`: list available archetypes and exit
+
+### What gets scaffolded
+
+Each archetype writes the following into the target project:
+
+- A top-level instructions file (`CLAUDE.md` for claude, `AGENTS.md` for copilot/cursor)
+- One or more rule files describing the SDLC stage gates (and a stack rule for stack variants)
+- Six specialized agent files (orchestrator, spec, plan, execution, review, stack)
+- Eight skill files covering the SDLC workflow
+- Six command files for invoking common SDLC operations
+
+File paths, frontmatter, and extensions adapt to the selected `--target`:
+
+| Family | claude | copilot | cursor |
+|---|---|---|---|
+| instructions | `CLAUDE.md` | `AGENTS.md` | `AGENTS.md` |
+| rules | `.claude/rules/*.md` | `.github/instructions/*.instructions.md` | `.cursor/rules/*.mdc` |
+| agents | `.claude/agents/*.agent.md` | `.github/agents/*.agent.md` | `.cursor/agents/*.agent.md` |
+| skills | `.claude/skills/*/SKILL.md` | `.github/skills/*/SKILL.md` | `.cursor/skills/*/SKILL.md` |
+| commands | `.claude/commands/*.md` | `.github/prompts/*.prompt.md` | `.cursor/commands/*.md` |
+
+### Auto-detection
+
+`harness-gen archetype` scans the target project for known build files and substitutes detected values into templates:
+
+- `pom.xml` → Maven project name, `./mvnw test`, `./mvnw package -DskipTests`
+- `package.json` → npm package name, `npm test`, `npm run build`
+- `pyproject.toml` → Python project name, `python -m pytest`, `python -m build`
+- `requirements.txt` → directory name, `python -m pytest`, `python -m build`
+- `*.csproj` → project name, `dotnet test`, `dotnet build`
+
+If none of these are found, placeholder comments are inserted that you can fill in later.
+
+### Dry run and force
+
+To preview what would be written:
+
+```bash
+harness-gen archetype --name sdlc-java-spring --target claude --project D:\work\my-service --dry-run
+```
+
+To overwrite already-existing files:
+
+```bash
+harness-gen archetype --name sdlc --target copilot --project D:\work\my-service --force
+```
+
 ## Core concepts
 
 ### `--target`
@@ -240,6 +319,8 @@ node index.js --target D:\work\my-service --targets copilot --outputs skills,rul
 
 ## CLI reference
 
+Main command options:
+
 - `--target <path>`: target repository path
 - `--outputs <items>`: comma-separated artifact families
 - `--targets <items>`: comma-separated tool targets
@@ -249,6 +330,15 @@ node index.js --target D:\work\my-service --targets copilot --outputs skills,rul
 - `--mock`: use deterministic mock content instead of the live LLM
 - `--max-files-per-prompt <count>`: limit files included in one generation window
 - `--max-endpoints-per-prompt <count>`: limit endpoints included in one generation window
+
+`archetype` subcommand options:
+
+- `--name <archetype>`: archetype name to scaffold
+- `--project <path>`: target project directory (default: current directory)
+- `--target <tool>`: tool target (`claude`, `copilot`, `cursor`; default: `claude`)
+- `--dry-run`: print planned paths without writing files
+- `--force`: overwrite existing files
+- `--list`: list available archetypes
 
 ## How the tool is opinionated
 

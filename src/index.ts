@@ -17,6 +17,7 @@ import { scanPythonStructure } from "./parsers/pythonParser.js";
 import { scanTSStructure } from "./parsers/tsParser.js";
 import type { ArtifactFamily, CacheMap, CliOptions, FileSummary, ScanResult, TargetTool } from "./types.js";
 import { materializeArtifacts } from "./writers.js";
+import { buildArchetypeCommand } from "./archetypes/command.js";
 
 const DEFAULT_OUTPUTS: ArtifactFamily[] = ["instructions", "rules", "skills", "hooks", "agents"];
 const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
@@ -196,6 +197,14 @@ function printScanSummary(scanResult: ScanResult): void {
 }
 
 async function run(): Promise<void> {
+  // Intercept subcommands before Commander setup — registering subcommands on the
+  // parent causes Commander v13+ to show help when the parent is invoked directly.
+  if (process.argv[2] === "archetype") {
+    const sub = buildArchetypeCommand();
+    await sub.parseAsync(["node", "archetype"].concat(process.argv.slice(3)));
+    return;
+  }
+
   const program = new Command();
   program
     .name("harness-gen")
@@ -211,6 +220,7 @@ async function run(): Promise<void> {
     .option("--max-endpoints-per-prompt <count>", "Maximum endpoints per prompt window", "80");
 
   program.parse(process.argv);
+
   const parsed = program.opts();
 
   const options: CliOptions = {

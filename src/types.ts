@@ -1,4 +1,4 @@
-export type ArtifactFamily = "instructions" | "rules" | "skills" | "hooks" | "agents";
+export type ArtifactFamily = "instructions" | "rules" | "skills" | "hooks" | "agents" | "commands";
 
 export type TargetTool = "standard" | "claude" | "cursor" | "copilot" | "codex";
 
