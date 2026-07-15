@@ -79,6 +79,7 @@ export interface CliOptions extends PromptLimits {
   scanOnly: boolean;
   dryRun: boolean;
   mock: boolean;
+  orgConfig?: string;
 }
 
 export interface PlannedArtifact {

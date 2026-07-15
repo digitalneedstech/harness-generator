@@ -1,0 +1,45 @@
+---
+# org-config-startup.yaml - Typical startup configuration
+# Lightweight, focused on rapid iteration
+
+organization:
+  name: "TechStartup Inc"
+  domain: "techstartup.com"
+
+policies:
+  coding:
+    language_style:
+      - lang: "typescript"
+        convention: "camelCase for variables/functions, PascalCase for classes"
+        import_rules: "Group by origin: stdlib, dependencies, local"
+
+  api_design:
+    request_envelope:
+      enabled: true
+      template: |
+        { "data": <payload>, "meta": { "timestamp" }, "errors": null }
+    authentication:
+      method: "jwt"
+
+  testing:
+    minimum_coverage: 60
+    test_types_required:
+      - unit
+    framework_approved:
+      typescript: ["jest"]
+      python: ["pytest"]
+
+  security:
+    pii_handling: "Basic PII scrubbing for logs"
+    authentication_required: true
+
+  deployment:
+    health_check_endpoint: "/health"
+
+stacks:
+  typescript:
+    build_command: "npm run build"
+    test_command: "npm test"
+  python:
+    build_command: "pip install -r requirements.txt"
+    test_command: "pytest"

@@ -103,6 +103,44 @@ harness-gen archetype --name sdlc-java-spring --target claude --project /path/to
 
 Archetypes auto-detect project name and build/test commands from `pom.xml`, `package.json`, `pyproject.toml`, `requirements.txt`, or `*.csproj`. Placeholder comments are inserted when none are found.
 
+### Organization Configuration (org-config)
+
+Define organization-wide policies once, automatically enforce across all projects:
+
+```bash
+# 1. Copy the org-config template
+cp archetypes/org-config-template.yaml org-config.yaml
+
+# 2. Customize for your organization
+# - Define testing coverage minimum (e.g., 70%)
+# - Define API design standards (e.g., request envelope format)
+# - Define security policies (e.g., PII handling)
+# - Add custom org-specific policies
+
+# 3. Scaffold a new project with org policies
+harness-gen archetype --name sdlc \
+  --target claude \
+  --project /my-service \
+  --org-config org-config.yaml
+```
+
+What gets generated:
+- **Wiki files** (`wiki/`) — Mermaid diagrams and documentation agents load on-demand
+- **Enforcement rules** (`.claude/rules/`) — Guardrails that validate policy compliance
+- **Agent instructions** (`.claude/agents/`) — Updated with policy enforcement
+- **AGENTS.md** — Instructions for agents to load wikis contextually
+
+See [org-config user guide](docs/org-config-guide.md) for:
+- Policy categories and examples
+- How policies translate to enforcement artifacts
+- Common patterns (startup, enterprise, regulated)
+- Troubleshooting
+
+Example org-configs:
+- `archetypes/examples/org-config-startup.yaml` — Rapid iteration
+- `archetypes/examples/org-config-enterprise.yaml` — Strict standards
+- `archetypes/examples/org-config-regulated.yaml` — Compliance-heavy
+
 ## Live Generation Setup
 
 ```bash

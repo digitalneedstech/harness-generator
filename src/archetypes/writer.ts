@@ -5,6 +5,10 @@ import type { ArchetypeManifest } from "./registry.js";
 import type { ArchetypeTarget } from "./mapper.js";
 import { mapArtifact } from "./mapper.js";
 import type { ProjectSignals } from "./scanner.js";
+import type { OrgConfig } from "../types.js";
+import { generateWikis, writeWikis } from "../wiki/generator.js";
+import { validateOrgConfigStrict } from "../orgconfig/validator.js";
+import { generateEnforcementArtifacts } from "../enforcement/policyToArtifacts.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ARCHETYPES_DIR = path.resolve(__dirname, "../../archetypes");
@@ -89,6 +93,54 @@ export function writeArchetypeFiles(
     }
 
     results.push({ relativePath: mapped.relativePath, skipped: false });
+  }
+
+  return results;
+}
+
+export function writeArchetypeWithWikis(
+  projectRoot: string,
+  manifest: ArchetypeManifest,
+  target: ArchetypeTarget,
+  signals: ProjectSignals,
+  dryRun: boolean,
+  force: boolean,
+  orgConfig: OrgConfig | null
+): WriteResult[] {
+  // Write archetype as before
+  const results = writeArchetypeFiles(manifest, projectRoot, target, signals, dryRun, force);
+
+  // If org config provided, generate and write wikis and enforcement artifacts
+  if (orgConfig) {
+    validateOrgConfigStrict(orgConfig);
+
+    // Write wikis
+    if (!dryRun) {
+      const wikis = generateWikis(orgConfig);
+      writeWikis(projectRoot, wikis);
+    }
+
+    // Write enforcement artifacts
+    const artifacts = generateEnforcementArtifacts(orgConfig);
+    for (const artifact of artifacts) {
+      const relativePath = path.join(".claude", artifact.relativePath);
+      const absolutePath = path.join(projectRoot, relativePath);
+
+      if (!force && fs.existsSync(absolutePath)) {
+        results.push({ relativePath, skipped: true });
+        continue;
+      }
+
+      if (!dryRun) {
+        const dirPath = path.dirname(absolutePath);
+        if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath, { recursive: true });
+        }
+        fs.writeFileSync(absolutePath, artifact.content, "utf-8");
+      }
+
+      results.push({ relativePath, skipped: false });
+    }
   }
 
   return results;
