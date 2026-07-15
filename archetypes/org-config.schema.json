@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "organization": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "domain": { "type": "string" }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "properties": {
+        "coding": { "type": "object" },
+        "api_design": {
+          "type": "object",
+          "properties": {
+            "authentication": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": ["oauth2", "jwt", "api-key", "basic"]
+                }
+              }
+            }
+          }
+        },
+        "testing": {
+          "type": "object",
+          "properties": {
+            "minimum_coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "security": { "type": "object" },
+        "deployment": { "type": "object" },
+        "observability": { "type": "object" },
+        "custom": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "policy_name": { "type": "string" },
+              "wiki_file": { "type": "string" }
+            },
+            "required": ["policy_name", "wiki_file"]
+          }
+        }
+      }
+    },
+    "stacks": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9-]+$": {
+          "type": "object",
+          "properties": {
+            "build_command": { "type": "string" },
+            "test_command": { "type": "string" },
+            "frameworks_approved": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

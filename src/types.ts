@@ -115,3 +115,92 @@ export interface GenerationClient {
   readonly mode: "anthropic" | "mock";
   generate(input: GenerationInput): Promise<string>;
 }
+
+export interface OrgPolicy {
+  [key: string]: unknown;
+}
+
+export interface CodingPolicy {
+  language_style?: Record<string, unknown>;
+  import_rules?: string;
+  annotation_enforcement?: Array<{ annotation: string; rule: string }>;
+}
+
+export interface ApiDesignPolicy {
+  request_envelope?: { enabled: boolean; template: string };
+  authentication?: { method: string; scopes_required?: string[] };
+  error_codes?: Array<{ code: string; meaning: string; http_status: number }>;
+}
+
+export interface TestingPolicy {
+  minimum_coverage?: number;
+  test_types_required?: string[];
+  framework_approved?: Record<string, string[]>;
+}
+
+export interface SecurityPolicy {
+  secrets_policy?: string;
+  pii_handling?: string;
+  authentication_required?: boolean;
+}
+
+export interface DeploymentPolicy {
+  health_check_endpoint?: string;
+  readiness_check_endpoint?: string;
+  graceful_shutdown_timeout?: string;
+  blue_green_supported?: boolean;
+}
+
+export interface ObservabilityPolicy {
+  logging_format?: string;
+  trace_header?: string;
+  metrics_system?: string;
+  required_metrics?: string[];
+}
+
+export interface StackDefinition {
+  build_command?: string;
+  test_command?: string;
+  frameworks_approved?: string[];
+  conventions_file?: string;
+}
+
+export interface CustomPolicy {
+  policy_name: string;
+  wiki_file: string;
+  content?: Record<string, unknown>;
+}
+
+export interface OrgConfig {
+  organization?: {
+    name?: string;
+    domain?: string;
+  };
+  policies?: {
+    coding?: CodingPolicy;
+    api_design?: ApiDesignPolicy;
+    testing?: TestingPolicy;
+    security?: SecurityPolicy;
+    deployment?: DeploymentPolicy;
+    observability?: ObservabilityPolicy;
+    custom?: CustomPolicy[];
+  };
+  stacks?: {
+    [key: string]: StackDefinition;
+  };
+}
+
+export interface WikiFile {
+  filename: string;
+  title: string;
+  description: string;
+  content: string;
+  isFixed: boolean;
+}
+
+export interface EnforcementArtifact {
+  family: "rules" | "agents" | "skills" | "commands";
+  relativePath: string;
+  content: string;
+  enforcedPolicy: string;
+}
