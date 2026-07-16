@@ -3,4 +3,3 @@ node_modules/
 dist/
 roadmap/**
 .claude/**
-.agent-harness/**

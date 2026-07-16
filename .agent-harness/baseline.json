@@ -1,0 +1,521 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-16T10:09:16.235Z",
+  "harnessGenVersion": "1.0.1",
+  "targetRootHash": "3445850887e28032927062d44c8e57c65753773edddec468e4ba1891edc65292",
+  "files": [
+    {
+      "filePath": "src/analyzer.ts",
+      "hash": "5ef73c0cfb0e17cec4bd212c3d754faa91792cb1de098ca8eb1e1926a1ffceea",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/archetypes/command.ts",
+      "hash": "efd69894260e92cca21ef0c18c1e939034da01bb536562f46e7c3cdc3b10db53",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/archetypes/mapper.ts",
+      "hash": "54420d748cd9d3edb79da77f457b679c83f085523d22301deadcac8d61e1346d",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/archetypes/registry.ts",
+      "hash": "0157ab6e9022eaa49d881274b9b37e27b181456fa330cc48c191c265eb8315ce",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/archetypes/scanner.ts",
+      "hash": "ef188f79f498dff5559365772c6de9c6df0e6703410f7ebf289a29c387cec6d0",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/archetypes/writer.ts",
+      "hash": "b273b811c1d8e8c0ac6984f11b18a415c8565a74d685fd4ac5350eba67c2dcea",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/audit/baseline.ts",
+      "hash": "547c75e12fe04862d0018d138a6de02f1c59d1c2eb450aa3f0c463d3515abc17",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/audit/command.ts",
+      "hash": "fb3ffe10c86ff86fccee73e8ce6060cac0e9597073105f3429dbde4bd30a74b5",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/audit/diff.ts",
+      "hash": "55f5fbea347ba83e86e6a08d93a0ee55c362b482d88ffa1c46f1a17faf4ed00f",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/audit/report.ts",
+      "hash": "743f2efdee816127ce0c1e83dbb47f6ac1677892315a811ea1299debf955ccf5",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/cache.ts",
+      "hash": "0854fbc24e0126c32919f51efe41ca18fc02e6a9e57b994994762707883625ab",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/clustering.ts",
+      "hash": "8c297cafbcff65c6dbc42cbe46927824c0b3840ed3fceb566685e4a6444d787f",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/dependencies.ts",
+      "hash": "e754a2fda6a90d84496a2e70e8b631c4e3955e2d8282c1e275a52096f2220dd8",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/discovery.ts",
+      "hash": "655e61236b951492e640d3ed1ab112464b1c143ea7469ed9d3c18323450ced72",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/enforcement/policyToArtifacts.ts",
+      "hash": "2c5d282f08369e1887758ab5ee650c29b2a61f982e9d9aeeca437458a430cacb",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/index.ts",
+      "hash": "b4e59f5fba693a79d6c6b957a16b7c8d02c8a18cc5e0dfd467a6f117d99bb067",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/llm/client.ts",
+      "hash": "3c3cd2fa9eb545116f04281d3b1a2bf024862ce017228a30564f15252311c6e0",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/llm/prompts.ts",
+      "hash": "5fe11f2eb891be3486936699a4b10c43f79b9ef8e62d27c8427f4e7cc05da64e",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/orgconfig/loader.ts",
+      "hash": "5f171db5c641161423d0f10b50574c2fe9f6d489694690c8e2eaaa80dbacf8b8",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/orgconfig/schema.ts",
+      "hash": "ace2b4a292b74532bf66d972d3094dd9b0f988e5524a202aeb881a6d933860d3",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/orgconfig/validator.ts",
+      "hash": "ae52a21a65e2213357a6f51961638ad82c2d0e8f61b50f17e0789dc753a11730",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/parsers/javaParser.ts",
+      "hash": "54fb0d7c1d818be1dba0780b5cbf65fda107f34aeb3623ca9a64bb456d00c593",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/parsers/pythonParser.ts",
+      "hash": "a7be780ba05135437bc1c1a23d3ebfd88050a7923a66d1235a56eea1be0e3d2f",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/parsers/shared.ts",
+      "hash": "a4b87ab09e0827f9f3226e9661ecda3aa44c5f3bf381ebc3b8af57dbd2d0dcac",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/parsers/tsParser.ts",
+      "hash": "d872a3f6713816a753f3e25a91ab657a4a903ef80c102ceb20313ed920190364",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/paths.ts",
+      "hash": "54a170a0213a79ea1f8662dc14409004d2554c97232af37e00d7c86620e88242",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/archetype.test.ts",
+      "hash": "c1966db598dc61538e3ecc32666fe29488605d5042df3ff7d515c1b6ee9b448b",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/audit.test.ts",
+      "hash": "e48a7dbd5e8db9f003cb07c982ad029dbc1e483be30856d688e230e9251fd72c",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/integration-e2e.test.ts",
+      "hash": "faa09ab1a0d0d9d38ecad5b96e97f9563ad15fc0fef64f435fc572840b55756a",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/orgconfig-validator.test.ts",
+      "hash": "b2e9123d8e7c4e66b3d8b69d39f3385ffa7c2c480c16c5cad590f29c3b068165",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/orgconfig.test.ts",
+      "hash": "6af09fd762106d90101313c4a93bd989110f2afd7726f0236b03e21e368a037c",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/parser.test.ts",
+      "hash": "9bd9dc19779e400b70c7ebaf3e0f5987875ea90b0de8e02e74ec7d0e8a324cdd",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/pipeline.test.ts",
+      "hash": "a56be90d86a3d0fe74009630ef5d4b0133337483f9eca9527f898a8d12a40ca1",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tests/wiki-generator.test.ts",
+      "hash": "88ce01a1c5e72820fd2cc5ca5264a26e4d4290d8723d99a69efc938baf95b315",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/tree-sitter-grammars.d.ts",
+      "hash": "944d37e0add6f278c8811aed2e0514568416254baaf6bf69339ba939ca91caa3",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/types.ts",
+      "hash": "a98a415aec592fdcf4c3260f1b5237ef4446d797f4a836e6165f1b5bce92cfdf",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/wiki/generator.ts",
+      "hash": "4bcc43029ab1b7d4505f89dbb6aa3f8805857409dc136f878358fd3e58703319",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/wiki/templates.ts",
+      "hash": "9bcc56ebf4cb239926767c739ae1fe0e40341043d1a87bc38584a3c4a1e685b7",
+      "language": "ts",
+      "dependencies": []
+    },
+    {
+      "filePath": "src/writers.ts",
+      "hash": "91b8efbbb9a28d2e82abb31e84ebb68a2d7bc0dc90430175bd8451a2b76a538b",
+      "language": "ts",
+      "dependencies": []
+    }
+  ],
+  "clusters": [
+    {
+      "name": "src-analyzer",
+      "files": [
+        "src/analyzer.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-archetypes-command",
+      "files": [
+        "src/archetypes/command.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-archetypes-mapper",
+      "files": [
+        "src/archetypes/mapper.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-archetypes-registry",
+      "files": [
+        "src/archetypes/registry.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-archetypes-scanner",
+      "files": [
+        "src/archetypes/scanner.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-archetypes-writer",
+      "files": [
+        "src/archetypes/writer.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-audit-baseline",
+      "files": [
+        "src/audit/baseline.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-audit-command",
+      "files": [
+        "src/audit/command.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-audit-diff",
+      "files": [
+        "src/audit/diff.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-audit-report",
+      "files": [
+        "src/audit/report.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-cache",
+      "files": [
+        "src/cache.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-clustering",
+      "files": [
+        "src/clustering.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-dependencies",
+      "files": [
+        "src/dependencies.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-discovery",
+      "files": [
+        "src/discovery.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-enforcement-policytoartifacts",
+      "files": [
+        "src/enforcement/policyToArtifacts.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-index",
+      "files": [
+        "src/index.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-llm-client",
+      "files": [
+        "src/llm/client.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-llm-prompts",
+      "files": [
+        "src/llm/prompts.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-orgconfig-loader",
+      "files": [
+        "src/orgconfig/loader.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-orgconfig-schema",
+      "files": [
+        "src/orgconfig/schema.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-orgconfig-validator",
+      "files": [
+        "src/orgconfig/validator.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-parsers-javaparser",
+      "files": [
+        "src/parsers/javaParser.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-parsers-pythonparser",
+      "files": [
+        "src/parsers/pythonParser.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-parsers-shared",
+      "files": [
+        "src/parsers/shared.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-parsers-tsparser",
+      "files": [
+        "src/parsers/tsParser.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-paths",
+      "files": [
+        "src/paths.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-archetype-test",
+      "files": [
+        "src/tests/archetype.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-audit-test",
+      "files": [
+        "src/tests/audit.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-integration-e2e-test",
+      "files": [
+        "src/tests/integration-e2e.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-orgconfig-validator-test",
+      "files": [
+        "src/tests/orgconfig-validator.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-orgconfig-test",
+      "files": [
+        "src/tests/orgconfig.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-parser-test",
+      "files": [
+        "src/tests/parser.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-pipeline-test",
+      "files": [
+        "src/tests/pipeline.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tests-wiki-generator-test",
+      "files": [
+        "src/tests/wiki-generator.test.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-tree-sitter-grammars-d",
+      "files": [
+        "src/tree-sitter-grammars.d.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-types",
+      "files": [
+        "src/types.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-wiki-generator",
+      "files": [
+        "src/wiki/generator.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-wiki-templates",
+      "files": [
+        "src/wiki/templates.ts"
+      ],
+      "endpointCount": 0
+    },
+    {
+      "name": "src-writers",
+      "files": [
+        "src/writers.ts"
+      ],
+      "endpointCount": 0
+    }
+  ],
+  "artifacts": [],
+  "thresholds": {
+    "clusterDriftPercent": 25
+  }
+}
