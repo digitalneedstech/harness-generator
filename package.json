@@ -1,6 +1,6 @@
 {
   "name": "agent-harness-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scalable AI Agent Harness Generator for Complex Multi-Language Codebases",
   "type": "module",
   "main": "dist/index.js",
