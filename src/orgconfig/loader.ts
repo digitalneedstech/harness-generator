@@ -64,9 +64,21 @@ function parseYaml(content: string): Record<string, unknown> {
     if (parent.isArray && parent.currentArrayItem && indent > parent.indent) {
       // Add to current array item
       if (valueStr === "") {
-        const obj: Record<string, unknown> = {};
-        parent.currentArrayItem[key] = obj;
-        stack.push({ indent, key, value: obj, isArray: false });
+        // Check if next line is an array item
+        const nextLine = i + 1 < lines.length ? lines[i + 1] : "";
+        const nextTrimmed = nextLine.trim();
+
+        if (nextTrimmed.startsWith("- ")) {
+          // Array value
+          const arr: Array<Record<string, unknown>> = [];
+          parent.currentArrayItem[key] = arr;
+          stack.push({ indent, key, value: arr, isArray: true, currentArrayItem: undefined });
+        } else {
+          // Object value
+          const obj: Record<string, unknown> = {};
+          parent.currentArrayItem[key] = obj;
+          stack.push({ indent, key, value: obj, isArray: false });
+        }
       } else {
         parent.currentArrayItem[key] = parseValue(valueStr);
       }
