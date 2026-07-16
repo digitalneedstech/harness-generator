@@ -1,0 +1,54 @@
+name: Harness Drift Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  harness-drift-check:
+    name: Harness Drift Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build harness-gen
+        run: npm run build
+
+      - name: Run mandatory drift audit
+        run: |
+          node ./dist/index.js audit \
+            --target . \
+            --baseline .agent-harness/baseline.json \
+            --format markdown \
+            --report harness-drift-report.md \
+            --fail-on-drift
+
+      - name: Publish audit summary
+        if: always()
+        run: |
+          if [ -f harness-drift-report.md ]; then
+            cat harness-drift-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-drift-report
+          path: harness-drift-report.md
+          if-no-files-found: ignore

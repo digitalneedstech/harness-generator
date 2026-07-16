@@ -199,6 +199,79 @@ export interface WikiFile {
   isFixed: boolean;
 }
 
+// Audit types
+export type FindingSeverity = "info" | "warning" | "error";
+
+export type FindingCode =
+  | "NEW_UNCOVERED_CLUSTER"
+  | "STALE_ARTIFACT_REFERENCE"
+  | "CLUSTER_COMPOSITION_DRIFT"
+  | "FILE_HASH_CHANGED"
+  | "FILE_ADDED"
+  | "FILE_DELETED"
+  | "FILE_MOVED";
+
+export interface AuditFinding {
+  severity: FindingSeverity;
+  code: FindingCode;
+  message: string;
+  paths: string[];
+  recommendation: string;
+  blocking: boolean;
+}
+
+export interface AuditSummary {
+  filesAdded: number;
+  filesDeleted: number;
+  clustersChanged: number;
+  staleArtifacts: number;
+  blockingFindings: number;
+}
+
+export type AuditStatus = "pass" | "fail";
+
+export interface AuditReport {
+  status: AuditStatus;
+  summary: AuditSummary;
+  findings: AuditFinding[];
+}
+
+export interface BaselineFile {
+  filePath: string;
+  hash: string;
+  language: "ts" | "tsx" | "java" | "py";
+  dependencies: string[];
+}
+
+export interface BaselineCluster {
+  name: string;
+  files: string[];
+  endpointCount: number;
+}
+
+export interface BaselineArtifact {
+  family: ArtifactFamily;
+  target: TargetTool;
+  relativePath: string;
+  clusterName?: string;
+  sourceFiles: string[];
+}
+
+export interface BaselineThresholds {
+  clusterDriftPercent: number;
+}
+
+export interface Baseline {
+  schemaVersion: number;
+  generatedAt: string;
+  harnessGenVersion: string;
+  targetRootHash: string;
+  files: BaselineFile[];
+  clusters: BaselineCluster[];
+  artifacts: BaselineArtifact[];
+  thresholds: BaselineThresholds;
+}
+
 export interface EnforcementArtifact {
   family: "rules" | "agents" | "skills" | "commands";
   relativePath: string;

@@ -163,6 +163,64 @@ harness-gen archetype --name sdlc-java-spring --target claude --project /path/to
 
 Archetypes auto-detect project name and build/test commands from `pom.xml`, `package.json`, `pyproject.toml`, `requirements.txt`, or `*.csproj`. Placeholder comments are inserted when none are found.
 
+### Baseline Drift Check (`audit`)
+
+After generating harness artifacts, track changes in your repository and detect when new code or deleted files fall out of sync with your harness.
+
+#### Creating a baseline
+
+Run this after intentionally generating or updating harness artifacts:
+
+```bash
+harness-gen audit --target /path/to/my-service --update-baseline
+```
+
+This writes `.agent-harness/baseline.json` with:
+- Hash of each source file
+- Cluster composition
+- Paths to generated artifacts
+- Configured threshold for acceptable drift
+
+Commit both the generated artifacts **and** the baseline file:
+
+```bash
+git add .agent-harness/baseline.json .claude/ .github/
+git commit -m "Initialize harness with baseline"
+```
+
+#### Running audit checks
+
+On each PR, compare the live repository against the baseline:
+
+```bash
+harness-gen audit --target /path/to/my-service --fail-on-drift
+```
+
+Exit codes:
+- `0` — no blocking drift
+- `1` — blocking drift detected (new uncovered clusters or stale references)
+- `2` — configuration or runtime error (missing baseline, invalid target)
+
+#### GitHub Actions integration
+
+Use the provided workflow example to make drift checks mandatory on PRs:
+
+```bash
+# Copy the workflow template
+cp .github/workflows/harness-drift-check.yml your-repo/.github/workflows/
+
+# Or create it manually in your repo at .github/workflows/harness-drift-check.yml
+```
+
+Then configure GitHub branch protection:
+
+1. Go to **Settings → Branches → Branch protection rules**
+2. Enable **Require status checks to pass before merging**
+3. Select **Harness Drift Check**
+4. Save
+
+Now a PR cannot merge until the drift check passes.
+
 ### Organization Configuration (org-config)
 
 Define organization-wide policies once, automatically enforce across all projects:
@@ -239,6 +297,21 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 | `--dry-run` | Print planned paths without writing |
 | `--force` | Overwrite existing files |
 | `--list` | List available archetypes and exit |
+
+### `audit` subcommand
+
+Compare the current repository against the committed baseline and report drift:
+
+| Option | Description |
+|---|---|
+| `--target <path>` | Repository to audit (default: current directory) |
+| `--baseline <path>` | Baseline file path (default: `.agent-harness/baseline.json`) |
+| `--format <type>` | Report format: `text`, `markdown`, `json` (default: `text`) |
+| `--report <path>` | Write report to file |
+| `--fail-on-drift` | Exit non-zero on blocking drift (default in CI) |
+| `--no-fail-on-drift` | Exit zero even with drift (default locally) |
+| `--cluster-drift-threshold <percent>` | Cluster composition drift threshold (default: `25`) |
+| `--update-baseline` | Create or update baseline from current scan |
 
 ## How the Tool Is Opinionated
 
