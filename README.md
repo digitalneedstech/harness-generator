@@ -59,15 +59,75 @@ Source scanning covers TypeScript, TSX, Java, and Python. Endpoint detection sup
 
 ## Install
 
+### Using npm (recommended)
+
+Install globally to use `harness-gen` command anywhere:
+
 ```bash
-git clone <repo-url>
-cd harness-gen
-npm install
-npm run build
-npm link          # makes 'harness-gen' available globally
+npm install -g agent-harness-cli
+harness-gen --version
 ```
 
-Without `npm link`, use `node index.js` in place of `harness-gen` throughout.
+Use without installing globally:
+
+```bash
+npx agent-harness-cli --help
+```
+
+### From source (for development/contributing)
+
+Clone the repository and build locally:
+
+```bash
+git clone https://github.com/digitalneedstech/harness-generator.git
+cd harness-generator
+npm install
+npm run build
+npm link          # Links local version globally for testing
+```
+
+After making changes, rebuild with `npm run build` and changes are reflected in your linked `harness-gen` command.
+
+## Publishing (for maintainers)
+
+### First-time npm setup
+
+If you haven't published to npm before:
+
+1. Create an npm account at https://www.npmjs.com
+2. Authenticate locally:
+   ```bash
+   npm login
+   ```
+   Enter your npm username, password, and email when prompted.
+
+### Publishing a new version
+
+Each release, update the version and publish:
+
+```bash
+# Update version (patch/minor/major based on semver)
+npm version patch
+
+# Verify package contents before publishing
+npm pack --dry-run
+
+# Publish to npm registry
+npm publish
+```
+
+After publishing, the new version appears at: https://www.npmjs.com/package/agent-harness-cli
+
+### Verification
+
+Test the published package:
+
+```bash
+npm install -g agent-harness-cli@latest
+harness-gen --version
+```
+
+Users can now install with: `npm install -g agent-harness-cli`
 
 ## Quick Start
 
@@ -102,6 +162,44 @@ harness-gen archetype --name sdlc-java-spring --target claude --project /path/to
 ```
 
 Archetypes auto-detect project name and build/test commands from `pom.xml`, `package.json`, `pyproject.toml`, `requirements.txt`, or `*.csproj`. Placeholder comments are inserted when none are found.
+
+### Organization Configuration (org-config)
+
+Define organization-wide policies once, automatically enforce across all projects:
+
+```bash
+# 1. Copy the org-config template
+cp archetypes/org-config-template.yaml org-config.yaml
+
+# 2. Customize for your organization
+# - Define testing coverage minimum (e.g., 70%)
+# - Define API design standards (e.g., request envelope format)
+# - Define security policies (e.g., PII handling)
+# - Add custom org-specific policies
+
+# 3. Scaffold a new project with org policies
+harness-gen archetype --name sdlc \
+  --target claude \
+  --project /my-service \
+  --org-config org-config.yaml
+```
+
+What gets generated:
+- **Wiki files** (`wiki/`) — Mermaid diagrams and documentation agents load on-demand
+- **Enforcement rules** (`.claude/rules/`) — Guardrails that validate policy compliance
+- **Agent instructions** (`.claude/agents/`) — Updated with policy enforcement
+- **AGENTS.md** — Instructions for agents to load wikis contextually
+
+See [org-config user guide](docs/org-config-guide.md) for:
+- Policy categories and examples
+- How policies translate to enforcement artifacts
+- Common patterns (startup, enterprise, regulated)
+- Troubleshooting
+
+Example org-configs:
+- `archetypes/examples/org-config-startup.yaml` — Rapid iteration
+- `archetypes/examples/org-config-enterprise.yaml` — Strict standards
+- `archetypes/examples/org-config-regulated.yaml` — Compliance-heavy
 
 ## Live Generation Setup
 

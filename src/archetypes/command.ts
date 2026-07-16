@@ -4,7 +4,8 @@ import { resolveTargetRoot } from "../paths.js";
 import { getArchetype, listArchetypes } from "./registry.js";
 import { type ArchetypeTarget } from "./mapper.js";
 import { scanProjectSignals } from "./scanner.js";
-import { writeArchetypeFiles } from "./writer.js";
+import { writeArchetypeWithWikis } from "./writer.js";
+import { loadOrgConfigIfExists } from "../orgconfig/loader.js";
 
 const SUPPORTED_TARGETS = new Set<ArchetypeTarget>(["claude", "copilot", "cursor"]);
 
@@ -22,6 +23,7 @@ interface ArchetypeOptions {
   dryRun: boolean;
   force: boolean;
   list: boolean;
+  orgConfig?: string;
 }
 
 export function buildArchetypeCommand(): Command {
@@ -32,6 +34,7 @@ export function buildArchetypeCommand(): Command {
     .option("--name <archetype>", "Archetype to scaffold")
     .option("--project <path>", "Target project directory", process.cwd())
     .option("--target <tool>", "Tool target: claude, copilot, cursor", "claude")
+    .option("--org-config <path>", "Path to org-config.yaml (optional)")
     .option("--dry-run", "Print planned files without writing", false)
     .option("--force", "Overwrite existing files", false)
     .option("--list", "List available archetypes and exit", false)
@@ -80,7 +83,13 @@ export function buildArchetypeCommand(): Command {
         "Detected"
       );
 
-      const results = writeArchetypeFiles(manifest, projectRoot, target, signals, opts.dryRun, opts.force);
+      const orgConfig = opts.orgConfig ? loadOrgConfigIfExists(opts.orgConfig) : null;
+      if (opts.orgConfig && !orgConfig) {
+        p.cancel(`Org config not found: ${opts.orgConfig}`);
+        process.exit(1);
+      }
+
+      const results = writeArchetypeWithWikis(projectRoot, manifest, target, signals, opts.dryRun, opts.force, orgConfig);
 
       const written = results.filter((r) => !r.skipped);
       const skipped = results.filter((r) => r.skipped);

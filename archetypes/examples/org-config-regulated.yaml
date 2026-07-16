@@ -1,0 +1,73 @@
+---
+# org-config-regulated.yaml - Fintech/Healthcare with compliance requirements
+
+organization:
+  name: "Regulated Finance Corp"
+  domain: "fintech.com"
+
+policies:
+  coding:
+    language_style:
+      - lang: "java"
+        convention: "Strict typing, no wildcards, comprehensive documentation"
+
+  api_design:
+    authentication:
+      method: "oauth2"
+      scopes_required: ["read:pii", "write:transactions", "audit:compliance"]
+    error_codes:
+      - code: "E401"
+        meaning: "Authentication failed"
+        http_status: 401
+      - code: "E403"
+        meaning: "Insufficient permissions"
+        http_status: 403
+      - code: "E451"
+        meaning: "Legally restricted"
+        http_status: 451
+
+  testing:
+    minimum_coverage: 90
+    test_types_required:
+      - unit
+      - integration
+      - compliance
+    framework_approved:
+      java: ["junit5", "mockito", "testcontainers", "cucumber"]
+
+  security:
+    secrets_policy: "HSM-backed vault; zero logging of secrets"
+    pii_handling: "Encryption at rest and in transit; audit every access"
+    authentication_required: true
+
+  deployment:
+    health_check_endpoint: "/health"
+    readiness_check_endpoint: "/ready"
+    graceful_shutdown_timeout: "120s"
+    blue_green_supported: true
+
+  observability:
+    logging_format: "json"
+    trace_header: "X-Trace-ID"
+    metrics_system: "prometheus"
+    required_metrics:
+      - "compliance_audit_trail"
+      - "encryption_key_rotation_timestamp"
+      - "failed_auth_attempts_total"
+
+  custom:
+    - policy_name: "compliance_audit_logging"
+      wiki_file: "compliance-audit-logging.md"
+    - policy_name: "pii_encryption"
+      wiki_file: "pii-encryption.md"
+    - policy_name: "regulatory_reporting"
+      wiki_file: "regulatory-reporting.md"
+
+stacks:
+  java:
+    build_command: "mvn clean verify -Pintegration,compliance,security"
+    test_command: "mvn test -Dspring.profiles.active=test,compliance"
+    frameworks_approved:
+      - "spring-boot:3.1+"
+      - "spring-security-oauth2"
+      - "spring-vault"

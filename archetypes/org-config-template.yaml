@@ -1,0 +1,89 @@
+---
+# org-config.yaml - Organization-wide AI agent harness policies
+# Copy this to your organization root and customize for your needs
+
+organization:
+  name: "Your Organization"
+  domain: "your-domain.com"
+
+policies:
+  # Coding standards: conventions, imports, annotations
+  coding:
+    language_style:
+      - lang: "java"
+        convention: "PascalCase for classes, camelCase for methods/variables"
+        import_rules: "No wildcard imports; organize by domain"
+        annotation_enforcement:
+          - annotation: "@Service"
+            rule: "All business logic uses @Service, not @Component"
+          - annotation: "@Autowired"
+            rule: "Use constructor injection ONLY; field injection forbidden"
+
+  # API design: envelopes, auth, error codes
+  api_design:
+    request_envelope:
+      enabled: true
+      template: |
+        {
+          "data": <payload>,
+          "meta": { "timestamp", "request_id", "version" },
+          "errors": null | [{ "code", "message", "details" }]
+        }
+    authentication:
+      method: "oauth2"
+      scopes_required: ["read:api", "write:api"]
+    error_codes:
+      - code: "E001"
+        meaning: "Invalid request"
+        http_status: 400
+      - code: "E002"
+        meaning: "Unauthorized"
+        http_status: 401
+
+  # Testing requirements
+  testing:
+    minimum_coverage: 70
+    test_types_required:
+      - unit
+      - integration
+    framework_approved:
+      java: ["junit5", "mockito"]
+      python: ["pytest", "pytest-cov"]
+
+  # Security & compliance
+  security:
+    secrets_policy: "No hardcoded secrets; use vaults only"
+    pii_handling: "Logs must never contain PII; use PII scrubbers"
+    authentication_required: true
+
+  # Deployment standards
+  deployment:
+    health_check_endpoint: "/health"
+    readiness_check_endpoint: "/ready"
+    graceful_shutdown_timeout: "30s"
+    blue_green_supported: true
+
+  # Observability
+  observability:
+    logging_format: "json"
+    trace_header: "X-Trace-ID"
+    metrics_system: "prometheus"
+
+  # Custom org-specific policies
+  custom:
+    - policy_name: "pii_handling"
+      wiki_file: "pii-handling.md"
+
+# Stack-specific overrides
+stacks:
+  java:
+    build_command: "mvn clean package"
+    test_command: "mvn test"
+    frameworks_approved:
+      - "spring-boot:2.7+"
+
+  python:
+    build_command: "pip install -r requirements.txt"
+    test_command: "pytest"
+    frameworks_approved:
+      - "fastapi:0.95+"

@@ -1,0 +1,84 @@
+---
+# org-config-enterprise.yaml - Large enterprise with strict policies
+
+organization:
+  name: "Enterprise Corp"
+  domain: "enterprise.com"
+
+policies:
+  coding:
+    language_style:
+      - lang: "java"
+        convention: "PascalCase for classes, camelCase for methods"
+        annotation_enforcement:
+          - annotation: "@Autowired"
+            rule: "Constructor injection ONLY, never field injection"
+          - annotation: "@Transactional"
+            rule: "All state-modifying service methods must have @Transactional"
+
+  api_design:
+    request_envelope:
+      enabled: true
+      template: |
+        {
+          "data": <payload>,
+          "meta": { "timestamp", "request_id", "version", "trace_id" },
+          "errors": null | [{ "code", "message", "field", "details" }]
+        }
+    authentication:
+      method: "oauth2"
+      scopes_required: ["read:api", "write:api", "admin:api"]
+    error_codes:
+      - code: "E001"
+        meaning: "Invalid request"
+        http_status: 400
+      - code: "E002"
+        meaning: "Unauthorized"
+        http_status: 401
+      - code: "E500"
+        meaning: "Internal error"
+        http_status: 500
+
+  testing:
+    minimum_coverage: 80
+    test_types_required:
+      - unit
+      - integration
+      - api
+    framework_approved:
+      java: ["junit5", "mockito", "testcontainers"]
+
+  security:
+    secrets_policy: "All secrets in Vault only; rotated quarterly"
+    pii_handling: "Advanced PII scrubbing; audit log all PII access"
+    authentication_required: true
+
+  deployment:
+    health_check_endpoint: "/health"
+    readiness_check_endpoint: "/ready"
+    graceful_shutdown_timeout: "60s"
+    blue_green_supported: true
+
+  observability:
+    logging_format: "json"
+    trace_header: "X-Trace-ID"
+    metrics_system: "prometheus"
+    required_metrics:
+      - "request_duration_seconds"
+      - "request_count_total"
+      - "error_count_total"
+      - "db_query_duration_seconds"
+
+  custom:
+    - policy_name: "multi_tenancy"
+      wiki_file: "multi-tenancy.md"
+    - policy_name: "audit_logging"
+      wiki_file: "audit-logging.md"
+
+stacks:
+  java:
+    build_command: "mvn clean package"
+    test_command: "mvn test -Dspring.profiles.active=test"
+    frameworks_approved:
+      - "spring-boot:3.0+"
+      - "spring-cloud-netflix"
