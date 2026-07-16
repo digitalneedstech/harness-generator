@@ -5,19 +5,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { Command } from "commander";
 import * as p from "@clack/prompts";
-import { hashContent, loadCache, saveCache } from "./cache.js";
-import { buildClusters } from "./clustering.js";
-import { inferDependencies, buildJavaIndex } from "./dependencies.js";
-import { discoverSourceFiles, readTargetFile } from "./discovery.js";
+import { analyzeRepository } from "./analyzer.js";
 import { createGenerationClient, MockGenerationClient } from "./llm/client.js";
 import { buildArtifactRequests } from "./llm/prompts.js";
-import { normalizePath, resolveTargetRoot } from "./paths.js";
-import { scanJavaStructure } from "./parsers/javaParser.js";
-import { scanPythonStructure } from "./parsers/pythonParser.js";
-import { scanTSStructure } from "./parsers/tsParser.js";
-import type { ArtifactFamily, CacheMap, CliOptions, FileSummary, ScanResult, TargetTool } from "./types.js";
+import { resolveTargetRoot } from "./paths.js";
+import type { ArtifactFamily, CliOptions, ScanResult, TargetTool } from "./types.js";
 import { materializeArtifacts } from "./writers.js";
 import { buildArchetypeCommand } from "./archetypes/command.js";
+import { buildAuditCommand } from "./audit/command.js";
 
 const DEFAULT_OUTPUTS: ArtifactFamily[] = ["instructions", "rules", "skills", "hooks", "agents"];
 const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
@@ -70,29 +65,6 @@ function parseTargets(value?: string): TargetTool[] {
     });
 }
 
-function inferLanguage(filePath: string): FileSummary["language"] {
-  if (filePath.endsWith(".tsx")) {
-    return "tsx";
-  }
-  if (filePath.endsWith(".ts")) {
-    return "ts";
-  }
-  if (filePath.endsWith(".java")) {
-    return "java";
-  }
-  return "py";
-}
-
-function parseSourceFile(filePath: string, content: string): FileSummary["endpoints"] {
-  if (filePath.endsWith(".java")) {
-    return scanJavaStructure(content);
-  }
-  if (filePath.endsWith(".py")) {
-    return scanPythonStructure(content);
-  }
-  return scanTSStructure(filePath, content);
-}
-
 async function promptForOutputs(): Promise<ArtifactFamily[]> {
   const response = await p.multiselect({
     message: "Select output artifacts to generate:",
@@ -108,67 +80,6 @@ async function promptForOutputs(): Promise<ArtifactFamily[]> {
   }
 
   return response as ArtifactFamily[];
-}
-
-function buildScanResult(targetRoot: string, files: FileSummary[]): ScanResult {
-  return {
-    targetRoot,
-    files,
-    clusters: buildClusters(files)
-  };
-}
-
-async function analyzeRepository(targetRoot: string): Promise<ScanResult> {
-  const sourceFiles = await discoverSourceFiles(targetRoot);
-  if (sourceFiles.length === 0) {
-    return { targetRoot, files: [], clusters: [] };
-  }
-
-  const cache = loadCache(targetRoot);
-  const knownFiles = new Set(sourceFiles.map(normalizePath));
-  const rawFiles = sourceFiles.map((filePath) => ({ filePath, content: readTargetFile(targetRoot, filePath) }));
-  const javaIndex = buildJavaIndex(rawFiles.filter((file) => file.filePath.endsWith(".java")));
-  const nextCache: CacheMap = {};
-  const summaries: FileSummary[] = [];
-
-  for (const file of rawFiles) {
-    const hash = hashContent(file.content);
-    const language = inferLanguage(file.filePath);
-    const cached = cache[file.filePath];
-
-    if (cached && cached.hash === hash) {
-      summaries.push({
-        filePath: file.filePath,
-        hash,
-        endpoints: cached.endpoints,
-        dependencies: cached.dependencies,
-        language: cached.language
-      });
-      nextCache[file.filePath] = cached;
-      continue;
-    }
-
-    const endpoints = parseSourceFile(file.filePath, file.content);
-    const dependencies = inferDependencies(file.filePath, language, file.content, knownFiles, javaIndex);
-
-    summaries.push({
-      filePath: file.filePath,
-      hash,
-      endpoints,
-      dependencies,
-      language
-    });
-
-    nextCache[file.filePath] = {
-      hash,
-      endpoints,
-      dependencies,
-      language
-    };
-  }
-
-  saveCache(targetRoot, nextCache);
-  return buildScanResult(targetRoot, summaries);
 }
 
 function printScanSummary(scanResult: ScanResult): void {
@@ -202,6 +113,12 @@ async function run(): Promise<void> {
   if (process.argv[2] === "archetype") {
     const sub = buildArchetypeCommand();
     await sub.parseAsync(["node", "archetype"].concat(process.argv.slice(3)));
+    return;
+  }
+
+  if (process.argv[2] === "audit") {
+    const sub = buildAuditCommand();
+    await sub.parseAsync(["node", "audit"].concat(process.argv.slice(3)));
     return;
   }
 
