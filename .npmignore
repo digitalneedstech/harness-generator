@@ -1,0 +1,49 @@
+# Source files
+src/
+
+# Test files
+*.test.ts
+*.spec.ts
+
+# Development dependencies
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Configuration files
+tsconfig.json
+tsconfig.build.json
+.eslintrc*
+.prettierrc*
+.editorconfig
+jest.config.js
+vitest.config.ts
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.circleci/
+.travis.yml
+
+# Documentation (except README)
+docs/
+.claude/
+.cursor/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+.env*
+.DS_Store
+*.tgz
+CLAUDE.md
+org-config.yaml

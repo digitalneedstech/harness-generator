@@ -32,5 +32,31 @@
   },
   "engines": {
     "node": ">=22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digitalneedstech/harness-generator"
+  },
+  "license": "Apache-2.0",
+  "author": "Digital Needs Tech <digitalneeds.tech@gmail.com>",
+  "keywords": [
+    "ai",
+    "agent",
+    "harness",
+    "generator",
+    "archetype",
+    "cli",
+    "sdlc",
+    "code-generation"
+  ],
+  "files": [
+    "dist/",
+    "archetypes/",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

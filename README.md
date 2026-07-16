@@ -59,15 +59,75 @@ Source scanning covers TypeScript, TSX, Java, and Python. Endpoint detection sup
 
 ## Install
 
+### Using npm (recommended)
+
+Install globally to use `harness-gen` command anywhere:
+
 ```bash
-git clone <repo-url>
-cd harness-gen
-npm install
-npm run build
-npm link          # makes 'harness-gen' available globally
+npm install -g agent-harness-cli
+harness-gen --version
 ```
 
-Without `npm link`, use `node index.js` in place of `harness-gen` throughout.
+Use without installing globally:
+
+```bash
+npx agent-harness-cli --help
+```
+
+### From source (for development/contributing)
+
+Clone the repository and build locally:
+
+```bash
+git clone https://github.com/digitalneedstech/harness-generator.git
+cd harness-generator
+npm install
+npm run build
+npm link          # Links local version globally for testing
+```
+
+After making changes, rebuild with `npm run build` and changes are reflected in your linked `harness-gen` command.
+
+## Publishing (for maintainers)
+
+### First-time npm setup
+
+If you haven't published to npm before:
+
+1. Create an npm account at https://www.npmjs.com
+2. Authenticate locally:
+   ```bash
+   npm login
+   ```
+   Enter your npm username, password, and email when prompted.
+
+### Publishing a new version
+
+Each release, update the version and publish:
+
+```bash
+# Update version (patch/minor/major based on semver)
+npm version patch
+
+# Verify package contents before publishing
+npm pack --dry-run
+
+# Publish to npm registry
+npm publish
+```
+
+After publishing, the new version appears at: https://www.npmjs.com/package/agent-harness-cli
+
+### Verification
+
+Test the published package:
+
+```bash
+npm install -g agent-harness-cli@latest
+harness-gen --version
+```
+
+Users can now install with: `npm install -g agent-harness-cli`
 
 ## Quick Start
 
