@@ -110,6 +110,7 @@ function renderArtifact(request: PlannedArtifact, body: string, scanResult: Scan
     case "root-agents":
     case "claude-instructions":
     case "copilot-instructions":
+    case "extension-prose":
       return `${body.trim()}\n`;
     case "copilot-rule":
     case "copilot-skill":
@@ -248,7 +249,7 @@ export async function materializeArtifacts(
   dryRun: boolean,
   scanResult: ScanResult
 ): Promise<GeneratedArtifact[]> {
-  const generated: GeneratedArtifact[] = [];
+  const generated = new Map<string, GeneratedArtifact>();
 
   for (const request of requests) {
     const parts: string[] = [];
@@ -267,7 +268,7 @@ export async function materializeArtifacts(
       }
     }
 
-    const mergedBody = request.mergeInstruction && parts.length > 1
+    const mergedBody = request.content ?? (request.mergeInstruction && parts.length > 1
       ? await client.generate({
           family: request.family,
           target: request.target,
@@ -276,26 +277,52 @@ export async function materializeArtifacts(
           clusterName: request.clusterName,
           artifactTitle: request.title
         })
-      : parts.join("\n\n---\n\n");
+      : parts.join("\n\n---\n\n"));
 
     const content = renderArtifact(request, mergedBody, scanResult);
     validateArtifact(request, content);
 
-    generated.push({
+    const nextArtifact: GeneratedArtifact = {
       relativePath: request.relativePath,
       content,
       family: request.family,
       target: request.target
-    });
-
-    if (dryRun) {
-      continue;
+    };
+    const existing = generated.get(request.relativePath);
+    if (existing) {
+      try {
+        const merged = deepMergeJson(JSON.parse(existing.content), JSON.parse(content));
+        generated.set(request.relativePath, { ...nextArtifact, content: renderJson(merged) });
+      } catch {
+        throw new Error(`Multiple artifacts target ${request.relativePath}, but their content cannot be merged safely.`);
+      }
+    } else {
+      generated.set(request.relativePath, nextArtifact);
     }
-
-    const absolutePath = path.join(targetRoot, request.relativePath);
-    fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
-    fs.writeFileSync(absolutePath, content);
   }
 
-  return generated;
+  const result = [...generated.values()];
+  if (!dryRun) {
+    for (const artifact of result) {
+      const absolutePath = path.join(targetRoot, artifact.relativePath);
+      fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+      fs.writeFileSync(absolutePath, artifact.content);
+    }
+  }
+  return result;
+}
+
+function deepMergeJson(left: Record<string, unknown>, right: Record<string, unknown>): Record<string, unknown> {
+  const merged: Record<string, unknown> = { ...left };
+  for (const [key, value] of Object.entries(right)) {
+    const current = merged[key];
+    if (Array.isArray(current) && Array.isArray(value)) {
+      merged[key] = [...current, ...value];
+    } else if (current && value && typeof current === "object" && typeof value === "object" && !Array.isArray(current) && !Array.isArray(value)) {
+      merged[key] = deepMergeJson(current as Record<string, unknown>, value as Record<string, unknown>);
+    } else {
+      merged[key] = value;
+    }
+  }
+  return merged;
 }

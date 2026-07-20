@@ -30,6 +30,18 @@ export function validateOrgConfig(config: OrgConfig): ValidationResult {
   }
 
   // Validate custom policies
+  if (config.policies?.permissions?.deny !== undefined && !Array.isArray(config.policies.permissions.deny)) {
+    errors.push("policies.permissions.deny must be an array");
+  }
+
+  if (config.policies?.cost_policy?.max_token_budget !== undefined) {
+    const budget = config.policies.cost_policy.max_token_budget;
+    if (typeof budget !== "number" || budget <= 0) {
+      errors.push("policies.cost_policy.max_token_budget must be a positive number");
+    }
+  }
+
+  // Validate custom policies
   if (config.policies?.custom) {
     if (!Array.isArray(config.policies.custom)) {
       errors.push("policies.custom must be an array");

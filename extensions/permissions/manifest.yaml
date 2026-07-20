@@ -1,0 +1,5 @@
+name: permissions
+version: 1.0.0
+type: extension
+artifact_family: permissions
+targets: [claude, cursor, copilot, codex]

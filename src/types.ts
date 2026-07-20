@@ -1,4 +1,7 @@
-export type ArtifactFamily = "instructions" | "rules" | "skills" | "hooks" | "agents" | "commands";
+export type BuiltinArtifactFamily = "instructions" | "rules" | "skills" | "hooks" | "agents" | "commands";
+
+/** Built-in families remain narrow while extensions register runtime names. */
+export type ArtifactFamily = BuiltinArtifactFamily | (string & {});
 
 export type TargetTool = "standard" | "claude" | "cursor" | "copilot" | "codex";
 
@@ -18,7 +21,8 @@ export type RenderKind =
   | "claude-hook"
   | "codex-rule"
   | "codex-agent"
-  | "codex-hook";
+  | "codex-hook"
+  | "extension-prose";
 
 export type DetectedFramework =
   | "Next.js"
@@ -93,6 +97,7 @@ export interface PlannedArtifact {
   slug: string;
   title: string;
   metadata?: Record<string, unknown>;
+  content?: string;
   llmRequired: boolean;
 }
 
@@ -145,6 +150,14 @@ export interface SecurityPolicy {
   authentication_required?: boolean;
 }
 
+export interface PermissionsPolicy {
+  deny?: string[];
+}
+
+export interface CostPolicy {
+  max_token_budget?: number;
+}
+
 export interface DeploymentPolicy {
   health_check_endpoint?: string;
   readiness_check_endpoint?: string;
@@ -182,6 +195,8 @@ export interface OrgConfig {
     api_design?: ApiDesignPolicy;
     testing?: TestingPolicy;
     security?: SecurityPolicy;
+    permissions?: PermissionsPolicy;
+    cost_policy?: CostPolicy;
     deployment?: DeploymentPolicy;
     observability?: ObservabilityPolicy;
     custom?: CustomPolicy[];
@@ -273,8 +288,37 @@ export interface Baseline {
 }
 
 export interface EnforcementArtifact {
-  family: "rules" | "agents" | "skills" | "commands";
+  family: ArtifactFamily;
   relativePath: string;
   content: string;
   enforcedPolicy: string;
+}
+
+export interface ScoreWeights {
+  coverage: number;
+  drift: number;
+  policy: number;
+}
+
+export interface ScoreResult {
+  overall: number;
+  coverage: number;
+  driftPenalty: number;
+  policyCoverage: number;
+  perCluster: Record<string, number>;
+  weights: ScoreWeights;
+}
+
+export type ValidationSeverity = "warning" | "error";
+
+export interface ValidationFinding {
+  severity: ValidationSeverity;
+  code: string;
+  message: string;
+  path?: string;
+}
+
+export interface ValidationReport {
+  valid: boolean;
+  findings: ValidationFinding[];
 }

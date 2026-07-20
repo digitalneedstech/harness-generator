@@ -1,0 +1,5 @@
+name: cost-policy
+version: 1.0.0
+type: extension
+artifact_family: cost-policy
+targets: [claude, cursor, copilot, codex]

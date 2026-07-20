@@ -33,6 +33,24 @@ export function generateEnforcementArtifacts(orgConfig: OrgConfig): EnforcementA
     });
   }
 
+  if (orgConfig.policies?.permissions) {
+    artifacts.push({
+      family: "permissions",
+      relativePath: ".agent-harness/policies/permissions.json",
+      content: JSON.stringify({ mandatoryDeny: orgConfig.policies.permissions.deny ?? [] }, null, 2),
+      enforcedPolicy: "permissions"
+    });
+  }
+
+  if (orgConfig.policies?.cost_policy) {
+    artifacts.push({
+      family: "cost-policy",
+      relativePath: ".agent-harness/policies/cost-policy.json",
+      content: JSON.stringify({ maxTokenBudget: orgConfig.policies.cost_policy.max_token_budget }, null, 2),
+      enforcedPolicy: "cost_policy"
+    });
+  }
+
   // Code reviewer agent instruction enhancement
   artifacts.push({
     family: "agents",

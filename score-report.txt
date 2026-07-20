@@ -1,0 +1,5 @@
+HARNESS MATURITY SCORE
+Overall: 30/100
+Coverage: 0/100
+Drift penalty: 85/100
+Policy coverage: 100/100

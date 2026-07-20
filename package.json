@@ -52,6 +52,7 @@
   "files": [
     "dist/",
     "archetypes/",
+    "extensions/",
     "CHANGELOG.md",
     "LICENSE",
     "README.md"

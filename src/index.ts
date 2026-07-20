@@ -13,6 +13,14 @@ import type { ArtifactFamily, CliOptions, ScanResult, TargetTool } from "./types
 import { materializeArtifacts } from "./writers.js";
 import { buildArchetypeCommand } from "./archetypes/command.js";
 import { buildAuditCommand } from "./audit/command.js";
+import { buildScoreCommand } from "./score/command.js";
+import { buildValidateCommand } from "./validate/command.js";
+import { buildSelfCommand } from "./self/command.js";
+import { buildExtensionCommand } from "./extensions/command.js";
+import { buildCostCommand, buildPermissionsCommand } from "./extensions/inspectCommand.js";
+import { buildExtensionRequests } from "./extensions/providers.js";
+import { discoverExtensionFamilies, getFamily, registerBuiltinFamilies, resetFamilyRegistry } from "./registry/familyRegistry.js";
+import { loadOrgConfigIfExists } from "./orgconfig/loader.js";
 
 const DEFAULT_OUTPUTS: ArtifactFamily[] = ["instructions", "rules", "skills", "hooks", "agents"];
 const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
@@ -41,6 +49,9 @@ function parseOutputs(value?: string): ArtifactFamily[] {
         return mapped;
       }
 
+      if (getFamily(entry)) {
+        return entry;
+      }
       throw new Error(`Unsupported output target: ${entry}`);
     });
 }
@@ -121,6 +132,38 @@ async function run(): Promise<void> {
     await sub.parseAsync(["node", "audit"].concat(process.argv.slice(3)));
     return;
   }
+  if (process.argv[2] === "score") {
+    const sub = buildScoreCommand();
+    await sub.parseAsync(["node", "score"].concat(process.argv.slice(3)));
+    return;
+  }
+  if (process.argv[2] === "validate") {
+    resetFamilyRegistry();
+    registerBuiltinFamilies();
+    const sub = buildValidateCommand();
+    await sub.parseAsync(["node", "validate"].concat(process.argv.slice(3)));
+    return;
+  }
+  if (process.argv[2] === "self") {
+    const sub = buildSelfCommand();
+    await sub.parseAsync(["node", "self"].concat(process.argv.slice(3)));
+    return;
+  }
+  if (process.argv[2] === "extension") {
+    const sub = buildExtensionCommand();
+    await sub.parseAsync(["node", "extension"].concat(process.argv.slice(3)));
+    return;
+  }
+  if (process.argv[2] === "permissions") {
+    const sub = buildPermissionsCommand();
+    await sub.parseAsync(["node", "permissions"].concat(process.argv.slice(3)));
+    return;
+  }
+  if (process.argv[2] === "cost") {
+    const sub = buildCostCommand();
+    await sub.parseAsync(["node", "cost"].concat(process.argv.slice(3)));
+    return;
+  }
 
   const program = new Command();
   program
@@ -133,12 +176,17 @@ async function run(): Promise<void> {
     .option("--scan-only", "Scan and summarize without generating files", false)
     .option("--dry-run", "Generate content without writing files", false)
     .option("--mock", "Use the built-in mock generator instead of Claude", false)
+    .option("--org-config <path>", "Path to org-config.yaml (optional)")
     .option("--max-files-per-prompt <count>", "Maximum files per prompt window", "25")
     .option("--max-endpoints-per-prompt <count>", "Maximum endpoints per prompt window", "80");
 
   program.parse(process.argv);
 
   const parsed = program.opts();
+
+  resetFamilyRegistry();
+  registerBuiltinFamilies();
+  discoverExtensionFamilies(resolveTargetRoot(parsed.target));
 
   const options: CliOptions = {
     target: resolveTargetRoot(parsed.target),
@@ -147,6 +195,7 @@ async function run(): Promise<void> {
     scanOnly: Boolean(parsed.scanOnly),
     dryRun: Boolean(parsed.dryRun),
     mock: Boolean(parsed.mock),
+    orgConfig: parsed.orgConfig,
     maxFilesPerPrompt: Number(parsed.maxFilesPerPrompt),
     maxEndpointsPerPrompt: Number(parsed.maxEndpointsPerPrompt)
   };
@@ -198,6 +247,11 @@ async function run(): Promise<void> {
     maxFilesPerPrompt: options.maxFilesPerPrompt,
     maxEndpointsPerPrompt: options.maxEndpointsPerPrompt
   }, options.targets);
+  const orgConfig = options.orgConfig ? loadOrgConfigIfExists(options.orgConfig) : null;
+  if (options.orgConfig && !orgConfig) {
+    throw new Error(`Org config not found: ${options.orgConfig}`);
+  }
+  requests.push(...buildExtensionRequests(scanResult, options.outputs, options.targets, orgConfig));
 
   spinner.start(options.dryRun ? "Preparing artifact payloads..." : "Generating artifacts...");
   const generationClient = options.dryRun

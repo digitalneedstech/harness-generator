@@ -84,19 +84,37 @@
     "language": "ts"
   },
   "src/enforcement/policyToArtifacts.ts": {
-    "hash": "2c5d282f08369e1887758ab5ee650c29b2a61f982e9d9aeeca437458a430cacb",
+    "hash": "999ce61415f074c90f29333c001b7465a7904eb8ddb26bd44b1ae88fe27a1f1a",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/extensions/command.ts": {
+    "hash": "a718bfb8ccc9d2794bf63b9864ed0a76b6ebd2ab59c241a6b10f8141838264da",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/extensions/inspectCommand.ts": {
+    "hash": "7c0f07503e90e72bcd61c96c170c4886e8564ff12671a02b271a8621d4530dba",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/extensions/providers.ts": {
+    "hash": "553f16691a48be7e68aeb32f600a9643b785f4908ee6bf6ec6b0cb837bd22712",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
   },
   "src/index.ts": {
-    "hash": "b4e59f5fba693a79d6c6b957a16b7c8d02c8a18cc5e0dfd467a6f117d99bb067",
+    "hash": "70ea91b924f1ebf8f7bf942af633ba0a8faef02dfba5d7fe7ae98d654df1a750",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
   },
   "src/llm/client.ts": {
-    "hash": "3c3cd2fa9eb545116f04281d3b1a2bf024862ce017228a30564f15252311c6e0",
+    "hash": "586c617c8a88b05a849cca56ab2188dc74a586df8820ada694917721dba648ca",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
@@ -108,7 +126,7 @@
     "language": "ts"
   },
   "src/orgconfig/loader.ts": {
-    "hash": "5f171db5c641161423d0f10b50574c2fe9f6d489694690c8e2eaaa80dbacf8b8",
+    "hash": "38eeb2027caad1f33683c01ecd1924006beb1f0e6454cb0ab0f62c47a0506d4c",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
@@ -120,7 +138,7 @@
     "language": "ts"
   },
   "src/orgconfig/validator.ts": {
-    "hash": "ae52a21a65e2213357a6f51961638ad82c2d0e8f61b50f17e0789dc753a11730",
+    "hash": "1000ba917f2f80303eb046240b0302d37fdb7d07e7d1f0ce01f2ad076aa68e76",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
@@ -155,6 +173,42 @@
     "dependencies": [],
     "language": "ts"
   },
+  "src/registry/familyRegistry.ts": {
+    "hash": "2d9b3a283371edc181869dcc78c51c4e31f1c65033251739b2d6ae1a7ca840b1",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/score/command.ts": {
+    "hash": "dc1fc47d4d36a81077e69bc54d13551e3c158686b62a2b2ca902819c5fc765c7",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/score/compute.ts": {
+    "hash": "9199237eb24c150911bb0f905c54f3c791028ad9a7f462ebe17a56e2d6c05f5f",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/self/check.ts": {
+    "hash": "a5c65795b6e6d993190d839c8804e77b8db69422bdd78aeaf07697e3dfd6742f",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/self/command.ts": {
+    "hash": "9babfcd58bbd225ff35e405cbf851481187cb799aa127261b4ca5b22924cb6f4",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/self/upgrade.ts": {
+    "hash": "fe5149d5d35822e5bef9e73251c9914cdbe1ada6a8cf35f36fb55f6554737f8a",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
   "src/tests/archetype.test.ts": {
     "hash": "c1966db598dc61538e3ecc32666fe29488605d5042df3ff7d515c1b6ee9b448b",
     "endpoints": [],
@@ -168,7 +222,7 @@
     "language": "ts"
   },
   "src/tests/integration-e2e.test.ts": {
-    "hash": "faa09ab1a0d0d9d38ecad5b96e97f9563ad15fc0fef64f435fc572840b55756a",
+    "hash": "5311999fc08c515852f467c8d4a5bc697ed36c2ad5bcc5f69d13a0d5697a2a84",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
@@ -197,6 +251,12 @@
     "dependencies": [],
     "language": "ts"
   },
+  "src/tests/roadmap-features.test.ts": {
+    "hash": "58d01bc0587a83204a412b67016cecee30003bd87417df3a2e16f54f37781ed1",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
   "src/tests/wiki-generator.test.ts": {
     "hash": "88ce01a1c5e72820fd2cc5ca5264a26e4d4290d8723d99a69efc938baf95b315",
     "endpoints": [],
@@ -210,7 +270,19 @@
     "language": "ts"
   },
   "src/types.ts": {
-    "hash": "a98a415aec592fdcf4c3260f1b5237ef4446d797f4a836e6165f1b5bce92cfdf",
+    "hash": "b1d8be9d75e584fc289f366b44f949d81723bcd52acb7ea2e9f52d02fbdfd625",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/validate/checks.ts": {
+    "hash": "a8ea99af40668eaec57489e8b576924eb4c16ccc4768542f80d3aaf32ca14712",
+    "endpoints": [],
+    "dependencies": [],
+    "language": "ts"
+  },
+  "src/validate/command.ts": {
+    "hash": "0d7eed42cf41fc2b8b158da710fb0ec0e07a6816ae6ba04d9687e14cfd8080d4",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
@@ -228,7 +300,7 @@
     "language": "ts"
   },
   "src/writers.ts": {
-    "hash": "91b8efbbb9a28d2e82abb31e84ebb68a2d7bc0dc90430175bd8451a2b76a538b",
+    "hash": "f534b295da6b1702c8bac231b66b178b48ca699ca6d28efa56f652204ebbd650",
     "endpoints": [],
     "dependencies": [],
     "language": "ts"
